@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { heroCreated } from '../../actions';
+import {filtersFetched, filtersFetching, filtersFetchingError, heroAdding, heroAdded, heroAddedError} from '../../actions';
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
@@ -23,6 +23,33 @@ const HeroesAddForm = () => {
     const [heroElement, setHeroElement] = useState();
 
     const {filters, filtersLoadingStatus} = useSelector(state => state);
+
+    const dispatch = useDispatch();
+    const {request} = useHttp();
+
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        if(typeof heroElement === 'undefined') {
+            return alert('Вы не выбрали элемент героя');
+        }
+
+        const newHero = {
+            'id': uuidv4(),
+            'name': heroName,
+            'description': heroDescription,
+            'element': heroElement
+        }
+
+        console.log(newHero)
+
+        dispatch(heroAdding());
+        request("http://localhost:3001/heroes", 'POST', JSON.stringify(newHero))
+            .then(data => dispatch(heroAdded(newHero)))
+            .catch(() => dispatch(heroAddedError()))
+    }
+
 
     const renderFilters = (filters, status) => {
         if (status === "loading") {
@@ -43,8 +70,9 @@ const HeroesAddForm = () => {
         }
     }
 
+
     return (
-        <form className="border p-4 shadow-lg rounded">
+        <form className="border p-4 shadow-lg rounded" onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
                 <label htmlFor="name" className="form-label fs-4">Имя нового героя</label>
                 <input 
@@ -88,7 +116,8 @@ const HeroesAddForm = () => {
                 </select>
             </div>
 
-            <button type="submit" className="btn btn-primary">Создать</button>
+            <button
+                type="submit" className="btn btn-primary">Создать</button>
         </form>
     )
 }

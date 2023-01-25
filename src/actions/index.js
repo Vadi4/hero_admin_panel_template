@@ -36,6 +36,25 @@ export const filtersFetchingError = () => {
     }
 }
 
+export const  heroAdding = () => {
+    return {
+        type: 'HERO_ADDING'
+    }
+}
+
+export const  heroAdded = (newHero) => {
+    return {
+        type: 'HERO_ADDED',
+        payload: newHero
+    }
+}
+
+export const  heroAddedError = () => {
+    return {
+        type: 'HERO_ADDED_ERROR'
+    }
+}
+
 export const heroRemove = (id) => {
     return {
         type: 'HERO_REMOVE',

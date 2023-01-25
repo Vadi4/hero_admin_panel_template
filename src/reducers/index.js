@@ -3,6 +3,7 @@ const initialState = {
     heroesLoadingStatus: 'idle',
     filters: [],
     filtersLoadingStatus: 'idle',
+    heroesAddingStatus: 'idle'
 }
 
 const reducer = (state = initialState, action) => {
@@ -39,10 +40,26 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 filtersLoadingStatus: 'error'
             }
+        case 'HERO_ADDING':
+            return {
+                ...state,
+                heroesAddingStatus: 'loading'
+            }
+        case 'HERO_ADDED':
+            const newHeroListAdded = state.heroes;
+            newHeroListAdded.push(action.payload);
+            return  {
+                ...state,
+                heroes: newHeroListAdded,
+                heroesAddingStatus: 'idle'
+            }
+        case 'HERO_ADDED_ERROR':
+            return {
+                ...state,
+                heroesAddingStatus: 'error'
+            }
         case 'HERO_REMOVE':
-
             const newHeroList = state.heroes.filter(item => item.id !== action.payload );
-
             return  {
                 ...state,
                 heroes: newHeroList

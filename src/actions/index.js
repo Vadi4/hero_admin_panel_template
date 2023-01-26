@@ -61,3 +61,10 @@ export const heroRemove = (id) => {
         payload: id
     }
 }
+
+export const setFilters = (name) => {
+    return {
+        type: 'SET_FILTERS',
+        payload: name
+    }
+}

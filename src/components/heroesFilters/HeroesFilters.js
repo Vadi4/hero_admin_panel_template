@@ -2,7 +2,9 @@ import {useHttp} from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { filtersFetching, filtersFetched, filtersFetchingError} from '../../actions';
+import {classNames} from 'classnames/bind';
+
+import { filtersFetching, filtersFetched, filtersFetchingError, setFilters } from '../../actions';
 // Задача для этого компонента:
 // Фильтры должны формироваться на основании загруженных данных
 // Фильтры должны отображать только нужных героев при выборе
@@ -12,7 +14,7 @@ import { filtersFetching, filtersFetched, filtersFetchingError} from '../../acti
 
 const HeroesFilters = () => {
 
-    const {filters, filtersLoadingStatus} = useSelector(state => state);
+    const {filters, filtersLoadingStatus, activeFilter} = useSelector(state => state);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -26,16 +28,30 @@ const HeroesFilters = () => {
         // eslint-disable-next-line
     }, []);
 
+
+    const renderFiltersList = (filters, status) => {
+
+        if (status === "loading") {
+            return <option>Загрузка элементов</option>
+        } else if (status === "error") {
+            return <option>Ошибка загрузки</option>
+        }
+
+        return filters.map((item) => {
+            let btnClass = 'btn';
+            btnClass += ` ${item.className}`;
+            if(item.name == activeFilter) btnClass += ' active';
+            return <button key={item.name} className={btnClass} onClick={() => dispatch(setFilters(item.name))} >{item.label}</button>
+        });
+    }
+
+
     return (
         <div className="card shadow-lg mt-4">
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
-                    <button className="btn btn-outline-dark active">Все</button>
-                    <button className="btn btn-danger">Огонь</button>
-                    <button className="btn btn-primary">Вода</button>
-                    <button className="btn btn-success">Ветер</button>
-                    <button className="btn btn-secondary">Земля</button>
+                    {renderFiltersList(filters, filtersLoadingStatus)}
                 </div>
             </div>
         </div>

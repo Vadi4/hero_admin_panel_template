@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import {filtersFetched, filtersFetching, filtersFetchingError, heroAdding, heroAdded, heroAddedError} from '../../actions';
+import {heroAdding, heroAdded, heroAddedError} from '../../actions';
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать

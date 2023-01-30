@@ -5,7 +5,7 @@ const initialState = {
     filtersLoadingStatus: 'idle',
     heroesAddingStatus: 'idle',
     activeFilter: 'all',
-    filterdHeroes: []
+    filteredHeroes: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -48,8 +48,11 @@ const reducer = (state = initialState, action) => {
                 heroesAddingStatus: 'loading'
             }
         case 'HERO_ADDED':
-            const newHeroListAdded = state.heroes;
-            newHeroListAdded.push(action.payload);
+            // const newHeroListAdded = state.heroes;
+            // newHeroListAdded.push(action.payload);
+
+            const newHeroListAdded = [...state.heroes, action.payload];
+
             return  {
                 ...state,
                 heroes: newHeroListAdded,
@@ -67,9 +70,18 @@ const reducer = (state = initialState, action) => {
                 heroes: newHeroList
             }
         case 'SET_FILTERS':
+
+            let filteredHeroes = state.heroes;
+            filteredHeroes = filteredHeroes.filter( hero => {
+                if( hero.element == action.payload || action.payload == 'all') return hero;
+            });
+
+            console.log(filteredHeroes)
+
             return  {
                 ...state,
-                activeFilter: action.payload
+                activeFilter: action.payload,
+                filteredHeroes: filteredHeroes
             }
         default: return state
     }
